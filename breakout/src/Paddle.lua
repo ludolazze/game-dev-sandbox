@@ -90,3 +90,8 @@ function Paddle:makeSmaller()
     self.size = math.max(PADDLE_MIN_SIZE, self.size - 1)
     self.width = self.size * 32
 end
+
+function Paddle:setSize(size)
+    self.size = math.max(PADDLE_MIN_SIZE, math.min(PADDLE_MAX_SIZE, size))
+    self.width = self.size * 32
+end

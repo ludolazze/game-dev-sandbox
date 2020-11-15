@@ -29,6 +29,9 @@ function ServeState:enter(params)
     -- init new ball (random color for fun)
     self.ball = Ball()
     self.ball.skin = math.random(7)
+
+    -- reset size of paddle
+    self.paddle:setSize(2)
 end
 
 function ServeState:update(dt)
