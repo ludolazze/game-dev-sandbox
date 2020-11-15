@@ -1,8 +1,15 @@
 
 
+
+POWERUP_MORE_BALLS = 9
+POWERUP_LARGER_PADDLE = 2
+POWERUP_SMALLER_PADDLE = 1
+
 POWERUP_TYPES =
 {
-    ['more-balls'] = 9
+    POWERUP_MORE_BALLS,
+    POWERUP_LARGER_PADDLE,
+    POWERUP_SMALLER_PADDLE
 }
 
 Powerup = Class{}
@@ -15,7 +22,7 @@ function Powerup:init(x, y)
     self.height = 16
 
     self.dy = 1
-    self.type = POWERUP_TYPES['more-balls']
+    self.type = POWERUP_MORE_BALLS
 end
 
 function Powerup:update(dt)
@@ -24,19 +31,22 @@ end
 
 function Powerup:render()
     love.graphics.draw(gTextures['main'], 
-            gFrames['powerups'][POWERUP_TYPES['more-balls']],
+            gFrames['powerups'][self.type],
             self.x, self.y)
 end
 
 function Powerup:activate(paddle, balls)
 
-    if self.type == POWERUP_TYPES['more-balls'] then
+    if self.type == POWERUP_MORE_BALLS then
         local ball = Ball(math.random(7))
         ball.x = paddle.x + (paddle.width / 2) - (ball.width / 2)
         ball.y = paddle.y - ball.height
         ball.dx = math.random(-200, 200)
         ball.dy = math.random(-50, -60)
         table.insert(balls, ball)
-
+    elseif self.type == POWERUP_LARGER_PADDLE then
+        paddle:makeBigger()
+    elseif self.type == POWERUP_SMALLER_PADDLE then 
+        paddle:makeSmaller()
     end
 end

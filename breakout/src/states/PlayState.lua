@@ -109,6 +109,7 @@ function PlayState:update(dt)
                 -- generate powerup with certain probability on hit
                 if math.random() <= POWERUP_EMISSION then
                     table.insert(self.powerups, Powerup(brick.x + brick.width / 2 - 8, brick.y))
+                    self.powerups[#self.powerups].type = POWERUP_TYPES[math.random(1, #POWERUP_TYPES)]
                 end
 
                 -- if we have enough points, recover a point of health

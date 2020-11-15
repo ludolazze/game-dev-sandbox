@@ -13,6 +13,10 @@
     which the player gets to choose upon starting the game.
 ]]
 
+
+PADDLE_MIN_SIZE = 1
+PADDLE_MAX_SIZE = 4
+
 Paddle = Class{}
 
 --[[
@@ -74,4 +78,15 @@ end
 function Paddle:render()
     love.graphics.draw(gTextures['main'], gFrames['paddles'][self.size + 4 * (self.skin - 1)],
         self.x, self.y)
+end
+
+
+function Paddle:makeBigger()
+    self.size = math.min(PADDLE_MAX_SIZE, self.size + 1)
+    self.width = self.size * 32
+end
+
+function Paddle:makeSmaller()
+    self.size = math.max(PADDLE_MIN_SIZE, self.size - 1)
+    self.width = self.size * 32
 end
