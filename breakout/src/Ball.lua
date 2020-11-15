@@ -72,8 +72,8 @@ function Ball:update(dt)
         gSounds['wall-hit']:play()
     end
 
-    if self.x >= VIRTUAL_WIDTH - 8 then
-        self.x = VIRTUAL_WIDTH - 8
+    if self.x >= VIRTUAL_WIDTH - self.width then
+        self.x = VIRTUAL_WIDTH - self.width
         self.dx = -self.dx
         gSounds['wall-hit']:play()
     end
@@ -89,5 +89,8 @@ function Ball:render()
     -- gTexture is our global texture for all blocks
     -- gBallFrames is a table of quads mapping to each individual ball skin in the texture
     love.graphics.draw(gTextures['main'], gFrames['balls'][self.skin],
-        self.x, self.y)
+        self.x, self.y, 0,
+        self.width / 8, 
+        self.height / 8
+    )
 end

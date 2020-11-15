@@ -27,8 +27,8 @@ function VictoryState:update(dt)
     self.paddle:update(dt)
 
     -- have the ball track the player
-    self.ball.x = self.paddle.x + (self.paddle.width / 2) - 4
-    self.ball.y = self.paddle.y - 8
+    self.ball.x = self.paddle.x + (self.paddle.width / 2) - (self.ball.width / 2)
+    self.ball.y = self.paddle.y - self.ball.height
 
     -- go to play screen if the player presses Enter
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
