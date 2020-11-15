@@ -54,7 +54,7 @@ function PlayState:update(dt)
     self.paddle:update(dt)
     self.ball:update(dt)
 
-    if self.ball:collides(self.paddle) then
+    if CollisionDetection:check(self.ball, self.paddle) then
         -- raise ball above paddle in case it goes below it, then reverse dy
         self.ball.y = self.paddle.y - self.ball.height
         self.ball.dy = -self.ball.dy
@@ -79,7 +79,7 @@ function PlayState:update(dt)
     for k, brick in pairs(self.bricks) do
 
         -- only check collision if we're in play
-        if brick.inPlay and self.ball:collides(brick) then
+        if brick.inPlay and CollisionDetection:check(self.ball, brick) then
 
             -- add to score
             self.score = self.score + (brick.tier * 200 + brick.color * 25)

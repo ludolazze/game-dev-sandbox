@@ -27,6 +27,8 @@ require 'src/LevelMaker'
 -- the rectangular entity the player controls, which deflects the ball
 require 'src/Paddle'
 
+require 'src/CollisionDetection'
+
 -- a basic StateMachine class which will allow us to transition to and from
 -- game states smoothly and avoid monolithic code in one file
 require 'src/StateMachine'
