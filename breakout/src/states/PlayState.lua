@@ -94,6 +94,7 @@ function PlayState:update(dt)
             gSounds['paddle-hit']:play()
         end
 
+            
         -- detect collision across all bricks with the ball
         for k, brick in pairs(self.bricks) do
 
@@ -106,10 +107,16 @@ function PlayState:update(dt)
                 -- trigger the brick's hit function, which removes it from play
                 brick:hit()
 
+                if ball.laser then
+                    while brick.inPlay do
+                        brick:hit()
+                    end
+                end
+
                 -- generate powerup with certain probability on hit
                 if math.random() <= POWERUP_EMISSION then
                     table.insert(self.powerups, Powerup(brick.x + brick.width / 2 - 8, brick.y))
-                    self.powerups[#self.powerups].type = POWERUP_TYPES[math.random(1, #POWERUP_TYPES)]
+                    self.powerups[#self.powerups].type = self:samplePowerup()
                 end
 
                 -- if we have enough points, recover a point of health
@@ -147,36 +154,39 @@ function PlayState:update(dt)
                 -- the brick and should check to see if the top or bottom edge is outside of the brick,
                 -- colliding on the top or bottom accordingly 
                 --
+                
+                if not ball.laser then
 
-                -- left edge; only check if we're moving right, and offset the check by a couple of pixels
-                -- so that flush corner hits register as Y flips, not X flips
-                if ball.x + 2 < brick.x and ball.dx > 0 then
+                    -- left edge; only check if we're moving right, and offset the check by a couple of pixels
+                    -- so that flush corner hits register as Y flips, not X flips
+                    if ball.x + 2 < brick.x and ball.dx > 0 then
+                        
+                        -- flip x velocity and reset position outside of brick
+                        ball.dx = -ball.dx
+                        ball.x = brick.x - ball.width
                     
-                    -- flip x velocity and reset position outside of brick
-                    ball.dx = -ball.dx
-                    ball.x = brick.x - ball.width
-                
-                -- right edge; only check if we're moving left, , and offset the check by a couple of pixels
-                -- so that flush corner hits register as Y flips, not X flips
-                elseif ball.x + ball.width - 2 > brick.x + brick.width and ball.dx < 0 then
+                    -- right edge; only check if we're moving left, , and offset the check by a couple of pixels
+                    -- so that flush corner hits register as Y flips, not X flips
+                    elseif ball.x + ball.width - 2 > brick.x + brick.width and ball.dx < 0 then
+                        
+                        -- flip x velocity and reset position outside of brick
+                        ball.dx = -ball.dx
+                        ball.x = brick.x + brick.width
                     
-                    -- flip x velocity and reset position outside of brick
-                    ball.dx = -ball.dx
-                    ball.x = brick.x + brick.width
-                
-                -- top edge if no X collisions, always check
-                elseif ball.y < brick.y then
+                    -- top edge if no X collisions, always check
+                    elseif ball.y < brick.y then
+                        
+                        -- flip y velocity and reset position outside of brick
+                        ball.dy = -ball.dy
+                        ball.y = brick.y - ball.height
                     
-                    -- flip y velocity and reset position outside of brick
-                    ball.dy = -ball.dy
-                    ball.y = brick.y - ball.height
-                
-                -- bottom edge if no X collisions or top collision, last possibility
-                else
-                    
-                    -- flip y velocity and reset position outside of brick
-                    ball.dy = -ball.dy
-                    ball.y = brick.y + brick.height
+                    -- bottom edge if no X collisions or top collision, last possibility
+                    else
+                        
+                        -- flip y velocity and reset position outside of brick
+                        ball.dy = -ball.dy
+                        ball.y = brick.y + brick.height
+                    end
                 end
 
                 -- slightly scale the y velocity to speed up the game, capping at +- 150
@@ -275,7 +285,16 @@ function PlayState:checkVictory()
 end
 
 
-function PlayState:updateBall(ball)
+function PlayState:samplePowerup()
+    local sample = math.random()
 
-
+    if sample < 0.1 then
+        return POWERUP_LASER_BALL
+    elseif sample < 0.4 then
+        return POWERUP_LARGER_PADDLE
+    elseif sample < 0.7 then
+        return POWERUP_SMALLER_PADDLE
+    else
+        return POWERUP_MORE_BALLS
+    end
 end
