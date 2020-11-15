@@ -29,6 +29,9 @@ require 'src/Paddle'
 
 require 'src/CollisionDetection'
 
+-- Powerups that can be picked up by player
+require 'src/Powerup'
+
 -- a basic StateMachine class which will allow us to transition to and from
 -- game states smoothly and avoid monolithic code in one file
 require 'src/StateMachine'
