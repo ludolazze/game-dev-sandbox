@@ -6,6 +6,7 @@ Currently implementing games from game development course from harvard ([gd50](h
 
 * Pong
 * Flappy Bird
+* Breakout
 
 ## Usage
 
