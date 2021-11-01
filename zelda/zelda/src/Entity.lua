@@ -28,12 +28,18 @@ function Entity:init(def)
     self.walkSpeed = def.walkSpeed
 
     self.health = def.health
+    self.maxHealth = def.health
 
     -- flags for flashing the entity when hit
     self.invulnerable = false
     self.invulnerableDuration = 0
     self.invulnerableTimer = 0
+
+    -- timer for turning transparency on and off, flashing
     self.flashTimer = 0
+
+    -- parameters for item drop
+    self.drops = def.drops
 
     self.dead = false
 end
@@ -52,6 +58,14 @@ function Entity:createAnimations(animations)
     return animationsReturned
 end
 
+function Entity:getDrop()
+    if self.drops and math.random() < self.drops.chance then
+        return self.drops.item
+    else
+        return nil
+    end
+end
+
 --[[
     AABB with some slight shrinkage of the box on the top side for perspective.
 ]]
@@ -62,6 +76,10 @@ end
 
 function Entity:damage(dmg)
     self.health = self.health - dmg
+end
+
+function Entity:heal(dmg)
+    self.health = math.min(self.health + dmg, self.maxHealth)
 end
 
 function Entity:goInvulnerable(duration)
@@ -102,14 +120,20 @@ function Entity:processAI(params, dt)
 end
 
 function Entity:render(adjacentOffsetX, adjacentOffsetY)
+    
     -- draw sprite slightly transparent if invulnerable every 0.04 seconds
     if self.invulnerable and self.flashTimer > 0.06 then
         self.flashTimer = 0
-        love.graphics.setColor(255, 255, 255, 64)
+        love.graphics.setColor(1, 1, 1, 64/255)
     end
 
     self.x, self.y = self.x + (adjacentOffsetX or 0), self.y + (adjacentOffsetY or 0)
     self.stateMachine:render()
-    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.setColor(1, 1, 1, 1)
     self.x, self.y = self.x - (adjacentOffsetX or 0), self.y - (adjacentOffsetY or 0)
+
+    love.graphics.setColor(255, 255, 0, 255)
+    love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
+    love.graphics.setColor(255, 255, 255, 255)
+
 end

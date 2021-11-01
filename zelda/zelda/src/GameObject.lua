@@ -9,6 +9,7 @@
 GameObject = Class{}
 
 function GameObject:init(def, x, y)
+    
     -- string identifying this object type
     self.type = def.type
 
@@ -17,6 +18,9 @@ function GameObject:init(def, x, y)
 
     -- whether it acts as an obstacle or not
     self.solid = def.solid
+
+    -- whether an object can be consumed
+    self.consumable = def.consumable
 
     self.defaultState = def.defaultState
     self.state = self.defaultState
@@ -30,6 +34,7 @@ function GameObject:init(def, x, y)
 
     -- default empty collision callback
     self.onCollide = function() end
+    self.onConsume = function() end
 end
 
 function GameObject:update(dt)
@@ -37,6 +42,13 @@ function GameObject:update(dt)
 end
 
 function GameObject:render(adjacentOffsetX, adjacentOffsetY)
-    love.graphics.draw(gTextures[self.texture], gFrames[self.texture][self.states[self.state].frame or self.frame],
-        self.x + adjacentOffsetX, self.y + adjacentOffsetY)
+    local frame = self.frame
+
+    if self.states then
+        frame = self.states[self.state].frame
+    end
+
+    love.graphics.draw(gTextures[self.texture], gFrames[self.texture][frame],
+    self.x + adjacentOffsetX, self.y + adjacentOffsetY)
+
 end

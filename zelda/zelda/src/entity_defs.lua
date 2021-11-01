@@ -206,6 +206,11 @@ ENTITY_DEFS = {
             ['idle-up'] = {
                 frames = {92}
             }
+        },
+
+        drops = {
+            item = "heart",
+            chance = 1.0
         }
     },
     ['spider'] = {
